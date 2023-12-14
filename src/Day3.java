@@ -43,13 +43,26 @@ public class Day3 {
         System.out.println(sum);
     }
     public static void part2(char[][] engine) throws FileNotFoundException, IOException{
-
+        boolean[][] visited = new boolean[engine.length][engine[0].length];
+        int sum = 0;
+        Integer gearratio;
+        for(int i = 0; i < engine.length; i++){
+            for(int j = 0; j < engine.length; j++){
+                if(engine[i][j] == '*'){
+                    if((gearratio = findSumAdjacentTwoNumbers(engine, visited, i, j)) != null){
+                        sum = sum + gearratio;
+                    }
+                }
+            }
+        }
+        System.out.println(sum);
     }
+    //PART 1
     private static boolean isSpecialCharacter(char ch) {
         String specialCharacters = "!@#$%^&*()-=_+[]{}|;:'\\,<>?/";
         return specialCharacters.contains(String.valueOf(ch));
     }
-
+    //PART 1 and 2
     private static String captureNumber(char[][] engine, boolean[][] visited, int i, int j) {
         //Checking to see if the current cell is out of bounds, already visited, or not a digit
         if (i < 0 || i >= engine.length || j < 0 || j >= engine[0].length || visited[i][j] || !Character.isDigit(engine[i][j])) {
@@ -61,7 +74,33 @@ public class Day3 {
                 currentDigit +
                 captureNumber(engine, visited, i, j + 1);
     }
+    //PART 2
+    private static Integer findSumAdjacentTwoNumbers(char[][] engine, boolean[][] visited, int i, int j){
+        ArrayList<Integer> gears = new ArrayList<>();
+        int rows = engine.length;
+        int cols = engine[0].length;
 
+        String returnedString;
+        for (int x = Math.max(0, i - 1); x <= Math.min(i + 1, rows - 1); x++) {
+            for (int y = Math.max(0, j - 1); y <= Math.min(j + 1, cols - 1); y++) {
+                if (x != i || y != j) {
+                    if (Character.isDigit(engine[x][y])) {
+                       if(!(returnedString = captureNumber(engine, visited, x, y)).isEmpty()){
+                           gears.add(Integer.parseInt(returnedString));
+                       }
+                    }
+                }
+            }
+        }
+        //Only allowing two numbers to be adjacent to the *
+        if(gears.size() == 2){
+           return gears.getFirst() * gears.getLast();
+        }else{
+            return null;
+        }
+
+    }
+    //PART 1
     private static boolean isSpecialAdjacent(char[][] engine, int i, int j) {
         int rows = engine.length;
         int cols = engine[0].length;
