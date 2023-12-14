@@ -17,7 +17,7 @@ public class Day2 {
 
     public static void part1() throws FileNotFoundException, IOException {
 
-        ArrayList<Bag_Day2> bagList = new ArrayList<>();
+
         String filepath = "./input/InputDay2";
         String regex = "Game (\\d+):((?:\\s*(\\d+)\\s*([a-zA-Z]+),?;?)+)";
         Pattern pattern = Pattern.compile(regex);
@@ -65,7 +65,7 @@ public class Day2 {
         System.out.println(sum);
     }
     public static void part2() throws FileNotFoundException, IOException{
-        ArrayList<Bag_Day2> bagList = new ArrayList<>();
+
         String filepath = "./input/InputDay2";
         String regex = "Game (\\d+):((?:\\s*(\\d+)\\s*([a-zA-Z]+),?;?)+)";
         Pattern pattern = Pattern.compile(regex);
