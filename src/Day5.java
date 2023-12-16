@@ -157,8 +157,7 @@ public class Day5 {
                 }
             }
             System.out.println(min);
-            System.out.println(minSeed);
-            System.out.println(minSeedArray.toString());
+
 
 
         }
