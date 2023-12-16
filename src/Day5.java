@@ -21,7 +21,7 @@ public class Day5 {
         String line;
         Boolean isFirstLine = true;
         Boolean isSecondLine = true;
-        Boolean noFirstSeedMap = true;
+        Boolean noSeedMap = true;
         String regex = "\\b(\\d+)\\b";
         Pattern pattern;
         Matcher matcher;
@@ -57,32 +57,41 @@ public class Day5 {
                     for(Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()){
                         Long entrySeed = entry.getKey();
                         ArrayList<Long> entrySeedArray = entry.getValue();
+
+
+                        noSeedMap = true;
+
+
                         try {
                             for (ArrayList<Long> set : currentMapInfo) {
+
                                 if(mapcount > 1){
                                     if(entrySeedArray.get(mapcount -2) >= set.get(1) &&
                                             entrySeedArray.get(mapcount -2) <= set.get(1) + set.get(2)){
                                             long displacement = entrySeedArray.get(mapcount -2) - set.get(1);
                                             entrySeedArray.add(set.get(0) + displacement);
+                                            noSeedMap = false;
 
                                     }
                                 }else{
                                     if(entrySeed >= set.get(1) && entrySeed <= set.get(1) + set.get(2)){
+                                        Long dest = set.get(0);
+                                        Long source = set.get(1);
+                                        Long increment= set.get(2);
                                         long displacement = entrySeed - set.get(1);
                                         entrySeedArray.add(set.get(0) + displacement);
-                                        noFirstSeedMap = false;
+                                        noSeedMap = false;
                                     }
                                 }
                             }
-                        }catch(IndexOutOfBoundsException e) {
+                        }catch(IndexOutOfBoundsException e) {}
+                        if(noSeedMap){
                             if (mapcount == 1) {
                                 entrySeedArray.add(entrySeed);
-                            } else {
-                                entrySeedArray.add(entrySeedArray.get(mapcount - 2));
+                            }else{
+                                entrySeedArray.add(entrySeedArray.get(mapcount -2));
                             }
-                        }
-                        if(noFirstSeedMap){
-                            entrySeedArray.add(entrySeed);
+
                         }
                         entry.setValue(entrySeedArray);
                     }
@@ -97,12 +106,59 @@ public class Day5 {
                 }
                currentMapInfo.add(numSet);
             }
-            for(ArrayList<Long> seedArrays : seedMap.values()){
-                if( seedArrays.getLast() < min){
-                    min = seedArrays.getLast();
+            for(Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()){
+                Long entrySeed = entry.getKey();
+                ArrayList<Long> entrySeedArray = entry.getValue();
+
+
+                noSeedMap = true;
+
+
+                try {
+                    for (ArrayList<Long> set : currentMapInfo) {
+
+                        if(mapcount > 1){
+                            if(entrySeedArray.get(mapcount -2) >= set.get(1) &&
+                                    entrySeedArray.get(mapcount -2) <= set.get(1) + set.get(2)){
+                                long displacement = entrySeedArray.get(mapcount -2) - set.get(1);
+                                entrySeedArray.add(set.get(0) + displacement);
+                                noSeedMap = false;
+
+                            }
+                        }else{
+                            if(entrySeed >= set.get(1) && entrySeed <= set.get(1) + set.get(2)){
+                                Long dest = set.get(0);
+                                Long source = set.get(1);
+                                Long increment= set.get(2);
+                                long displacement = entrySeed - set.get(1);
+                                entrySeedArray.add(set.get(0) + displacement);
+                                noSeedMap = false;
+                            }
+                        }
+                    }
+                }catch(IndexOutOfBoundsException e) {}
+                if(noSeedMap){
+                    if (mapcount == 1) {
+                        entrySeedArray.add(entrySeed);
+                    }else{
+                        entrySeedArray.add(entrySeedArray.get(mapcount -2));
+                    }
+
+                }
+                entry.setValue(entrySeedArray);
+            }
+            ArrayList<Long> minSeedArray = new ArrayList<>();
+            Long minSeed = 0L;
+            for(Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()){
+                if( entry.getValue().getLast() < min){
+                    min = entry.getValue().getLast();
+                    minSeedArray = entry.getValue();
+                    minSeed = entry.getKey();
                 }
             }
             System.out.println(min);
+            System.out.println(minSeed);
+            System.out.println(minSeedArray.toString());
 
 
         }
