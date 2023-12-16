@@ -162,8 +162,113 @@ public class Day5 {
 
         }
     }
-    public static void part2() throws FileNotFoundException, IOException{
+    public static void part2() throws FileNotFoundException, IOException {
+        String filepath = "./input/InputDay5";
+        String line;
+        Boolean isFirstLine = true;
+        Boolean isSecondLine = true;
+        Boolean noSeedMap = true;
+        String regex = "\\b(\\d+)\\b";
+        Pattern pattern;
+        Matcher matcher;
+        Map<Long, ArrayList<Long>> seedMap = new HashMap<>();
+        ArrayList<Long> seeds = new ArrayList<>();
+        ArrayList<ArrayList<Long>> currentMapInfo = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<Long>>> allMapInfo = new ArrayList<>();
+        int mapcount = 1;
+        pattern = Pattern.compile(regex);
+        String seedLine = "";
+        long min = Long.MAX_VALUE;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            while ((line = reader.readLine()) != null) {
+                matcher = pattern.matcher(line);
+                if (isFirstLine) {
+                    seedLine = line;
+                    isFirstLine = false;
+                    continue;
+                }
 
+                if (line.contains(":"))
+                    continue;
+                if (line.trim().isEmpty()) {
+                    if (isSecondLine) {
+                        isSecondLine = false;
+                        continue;
+                    }
+                    allMapInfo.add(currentMapInfo);
+                    currentMapInfo = new ArrayList<>();
+                    mapcount++;
+                    continue;
+                }
+                //adding the info to the current map : base scenario
+                ArrayList<Long> numSet = new ArrayList<Long>();
+                while (matcher.find()) {
+                    numSet.add(Long.parseLong(matcher.group(1)));
+                }
+                currentMapInfo.add(numSet);
+            }
+            allMapInfo.add(currentMapInfo);
+            //getting the ranges of seeds
+            matcher = pattern.matcher(seedLine);
+            int seedLineCount = 0;
+            ArrayList<ArrayList<Long>> seedRanges = new ArrayList<>();
+            ArrayList<Long> smallSeedRange = new ArrayList<>();
+            ArrayList<Long> largeSeedRange = new ArrayList<>();
+            Long temp = 0L;
+            while(matcher.find()){
+                if(seedLineCount % 2 == 0 ){
+                    temp = Long.parseLong(matcher.group(1));
+                    smallSeedRange.add(temp);
+                }else{
+                    largeSeedRange.add(temp + Long.parseLong(matcher.group(1)));
+                }
+                seedLineCount++;
+            }
+            seedRanges.add(smallSeedRange);
+            seedRanges.add(largeSeedRange);
+
+            System.out.println("Hello");
+            Long location = 0L;
+            int mapLayer = mapcount -1;
+            Long dest = 0L;
+            Long source = 0L;
+            Boolean foundMin = false;
+            Long minSeed = Long.MAX_VALUE;
+            Long minlocation = Long.MAX_VALUE;
+            while(location < Long.MAX_VALUE){
+                mapLayer = mapcount -1;
+                ArrayList<ArrayList<Long>> currentLayer;
+                source = location;
+                while(mapLayer >-1) {
+                    currentLayer = allMapInfo.get(mapLayer);
+                    for (int i = 0; i < currentLayer.size(); i++) {
+                        for (ArrayList<Long> mapLine : currentLayer) {
+                            if (source <= mapLine.get(0) && source >= mapLine.get(0) + mapLine.get(2)) {
+                                //not entering this here
+                                Long displacement = source - mapLine.get(0);
+                                source = mapLine.get(1) + displacement;
+                                break;
+                            }
+                        }
+                    }
+                    mapLayer--;
+                }
+                for(int i = 0; i < seedRanges.getFirst().size(); i++){
+                    if( seedRanges.getFirst().get(i) <= source && seedRanges.getLast().get(i) >= source){
+                        minSeed = source;
+                        foundMin = true;
+                        minlocation = location;
+                        break;
+                    }
+                }
+                if(foundMin){
+                    break;
+                }
+                System.out.println(location);
+                location++;
+            }
+            System.out.println(minlocation);
+            System.out.println(minSeed);
+        }
     }
-
 }
