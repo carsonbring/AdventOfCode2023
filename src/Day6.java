@@ -39,7 +39,7 @@ public class Day6 {
         System.out.println("Part 1");
         part1(timeDist);
         System.out.println("Part 2");
-        part2(timeDist);
+        part2();
     }
     public static void part1(Map<String, ArrayList<Integer>>  map) throws FileNotFoundException, IOException {
         ArrayList<Integer> waysToWin = new ArrayList<>();
@@ -63,7 +63,45 @@ public class Day6 {
         }
         System.out.println(answer);
     }
-    public static void part2(Map<String, ArrayList<Integer>> map) throws FileNotFoundException, IOException {
+    public static void part2() throws FileNotFoundException, IOException {
+        String filepath = "./input/InputDay6";
+        int counter = 0;
+        StringBuilder strTime = new StringBuilder();
+        StringBuilder strDist = new StringBuilder();
+        Long time = 0L;
+        Long distance = 0L;
+        String regex = "\\b(\\d+)\\b";
+        String line;
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher;
+        try(BufferedReader reader = new BufferedReader(new FileReader(filepath))){
+            while( (line = reader.readLine()) != null){
+                ArrayList<Integer> tempArray = new ArrayList<>();
+                if(counter == 0){
+                    matcher = pattern.matcher(line);
+                    while(matcher.find()){
+                        strTime.append(matcher.group(1));
+                    }
+                    time = Long.parseLong(strTime.toString());
+                }
+                if(counter == 1){
+                    matcher = pattern.matcher(line);
+                    while(matcher.find()){
+                        strDist.append(matcher.group(1));
+                    }
+                    distance = Long.parseLong(strDist.toString());
+                }
+                counter++;
+            }
+            int numWins = 0;
+            for(int rate = 1; rate < time; rate++ ){
+                long timeToComplete = time - rate;
+                if( rate * timeToComplete >= distance){
+                    numWins++;
+                }
+            }
+            System.out.println(numWins);
 
+        }
     }
 }
