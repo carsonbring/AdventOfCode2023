@@ -16,7 +16,8 @@ public class Day5 {
         System.out.println("Part 2");
         part2();
     }
-    public static void part1() throws FileNotFoundException, IOException{
+
+    public static void part1() throws FileNotFoundException, IOException {
         String filepath = "./input/InputDay5";
         String line;
         Boolean isFirstLine = true;
@@ -32,29 +33,29 @@ public class Day5 {
         pattern = Pattern.compile(regex);
 
         long min = Long.MAX_VALUE;
-        try(BufferedReader reader = new BufferedReader(new FileReader(filepath)) ){
-            while((line = reader.readLine()) != null){
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            while ((line = reader.readLine()) != null) {
                 matcher = pattern.matcher(line);
-                if(isFirstLine){
-                    while(matcher.find()){
-                         seeds.add(Long.parseLong(matcher.group(1)));
+                if (isFirstLine) {
+                    while (matcher.find()) {
+                        seeds.add(Long.parseLong(matcher.group(1)));
                     }
-                    for(Long seed : seeds){
+                    for (Long seed : seeds) {
                         seedMap.put(seed, new ArrayList<Long>());
                     }
                     isFirstLine = false;
                     continue;
                 }
 
-                if(line.contains(":"))
+                if (line.contains(":"))
                     continue;
-                if(line.trim().isEmpty()){
-                    if(isSecondLine){
+                if (line.trim().isEmpty()) {
+                    if (isSecondLine) {
                         isSecondLine = false;
                         continue;
                     }
 
-                    for(Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()){
+                    for (Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()) {
                         Long entrySeed = entry.getKey();
                         ArrayList<Long> entrySeedArray = entry.getValue();
 
@@ -65,31 +66,32 @@ public class Day5 {
                         try {
                             for (ArrayList<Long> set : currentMapInfo) {
 
-                                if(mapcount > 1){
-                                    if(entrySeedArray.get(mapcount -2) >= set.get(1) &&
-                                            entrySeedArray.get(mapcount -2) <= set.get(1) + set.get(2)){
-                                            long displacement = entrySeedArray.get(mapcount -2) - set.get(1);
-                                            entrySeedArray.add(set.get(0) + displacement);
-                                            noSeedMap = false;
+                                if (mapcount > 1) {
+                                    if (entrySeedArray.get(mapcount - 2) >= set.get(1) &&
+                                            entrySeedArray.get(mapcount - 2) <= set.get(1) + set.get(2)) {
+                                        long displacement = entrySeedArray.get(mapcount - 2) - set.get(1);
+                                        entrySeedArray.add(set.get(0) + displacement);
+                                        noSeedMap = false;
 
                                     }
-                                }else{
-                                    if(entrySeed >= set.get(1) && entrySeed <= set.get(1) + set.get(2)){
+                                } else {
+                                    if (entrySeed >= set.get(1) && entrySeed <= set.get(1) + set.get(2)) {
                                         Long dest = set.get(0);
                                         Long source = set.get(1);
-                                        Long increment= set.get(2);
+                                        Long increment = set.get(2);
                                         long displacement = entrySeed - set.get(1);
                                         entrySeedArray.add(set.get(0) + displacement);
                                         noSeedMap = false;
                                     }
                                 }
                             }
-                        }catch(IndexOutOfBoundsException e) {}
-                        if(noSeedMap){
+                        } catch (IndexOutOfBoundsException e) {
+                        }
+                        if (noSeedMap) {
                             if (mapcount == 1) {
                                 entrySeedArray.add(entrySeed);
-                            }else{
-                                entrySeedArray.add(entrySeedArray.get(mapcount -2));
+                            } else {
+                                entrySeedArray.add(entrySeedArray.get(mapcount - 2));
                             }
 
                         }
@@ -101,12 +103,12 @@ public class Day5 {
                 }
                 //adding the info to the current map : base scenario
                 ArrayList<Long> numSet = new ArrayList<Long>();
-                while(matcher.find()){
+                while (matcher.find()) {
                     numSet.add(Long.parseLong(matcher.group(1)));
                 }
-               currentMapInfo.add(numSet);
+                currentMapInfo.add(numSet);
             }
-            for(Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()){
+            for (Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()) {
                 Long entrySeed = entry.getKey();
                 ArrayList<Long> entrySeedArray = entry.getValue();
 
@@ -117,31 +119,32 @@ public class Day5 {
                 try {
                     for (ArrayList<Long> set : currentMapInfo) {
 
-                        if(mapcount > 1){
-                            if(entrySeedArray.get(mapcount -2) >= set.get(1) &&
-                                    entrySeedArray.get(mapcount -2) <= set.get(1) + set.get(2)){
-                                long displacement = entrySeedArray.get(mapcount -2) - set.get(1);
+                        if (mapcount > 1) {
+                            if (entrySeedArray.get(mapcount - 2) >= set.get(1) &&
+                                    entrySeedArray.get(mapcount - 2) <= set.get(1) + set.get(2)) {
+                                long displacement = entrySeedArray.get(mapcount - 2) - set.get(1);
                                 entrySeedArray.add(set.get(0) + displacement);
                                 noSeedMap = false;
 
                             }
-                        }else{
-                            if(entrySeed >= set.get(1) && entrySeed <= set.get(1) + set.get(2)){
+                        } else {
+                            if (entrySeed >= set.get(1) && entrySeed <= set.get(1) + set.get(2)) {
                                 Long dest = set.get(0);
                                 Long source = set.get(1);
-                                Long increment= set.get(2);
+                                Long increment = set.get(2);
                                 long displacement = entrySeed - set.get(1);
                                 entrySeedArray.add(set.get(0) + displacement);
                                 noSeedMap = false;
                             }
                         }
                     }
-                }catch(IndexOutOfBoundsException e) {}
-                if(noSeedMap){
+                } catch (IndexOutOfBoundsException e) {
+                }
+                if (noSeedMap) {
                     if (mapcount == 1) {
                         entrySeedArray.add(entrySeed);
-                    }else{
-                        entrySeedArray.add(entrySeedArray.get(mapcount -2));
+                    } else {
+                        entrySeedArray.add(entrySeedArray.get(mapcount - 2));
                     }
 
                 }
@@ -149,8 +152,8 @@ public class Day5 {
             }
             ArrayList<Long> minSeedArray = new ArrayList<>();
             Long minSeed = 0L;
-            for(Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()){
-                if( entry.getValue().getLast() < min){
+            for (Map.Entry<Long, ArrayList<Long>> entry : seedMap.entrySet()) {
+                if (entry.getValue().getLast() < min) {
                     min = entry.getValue().getLast();
                     minSeedArray = entry.getValue();
                     minSeed = entry.getKey();
@@ -159,9 +162,9 @@ public class Day5 {
             System.out.println(min);
 
 
-
         }
     }
+
     public static void part2() throws FileNotFoundException, IOException {
         String filepath = "./input/InputDay5";
         String line;
@@ -215,60 +218,58 @@ public class Day5 {
             ArrayList<Long> smallSeedRange = new ArrayList<>();
             ArrayList<Long> largeSeedRange = new ArrayList<>();
             Long temp = 0L;
-            while(matcher.find()){
-                if(seedLineCount % 2 == 0 ){
+            while (matcher.find()) {
+                if (seedLineCount % 2 == 0) {
                     temp = Long.parseLong(matcher.group(1));
                     smallSeedRange.add(temp);
-                }else{
-                    largeSeedRange.add(temp + Long.parseLong(matcher.group(1)));
+                } else {
+                    largeSeedRange.add(temp + Long.parseLong(matcher.group(1)) - 1);
                 }
                 seedLineCount++;
             }
             seedRanges.add(smallSeedRange);
             seedRanges.add(largeSeedRange);
 
-            System.out.println("Hello");
             Long location = 0L;
-            int mapLayer = mapcount -1;
+            int mapLayer = mapcount - 1;
             Long dest = 0L;
             Long source = 0L;
             Boolean foundMin = false;
             Long minSeed = Long.MAX_VALUE;
             Long minlocation = Long.MAX_VALUE;
-            while(location < Long.MAX_VALUE){
-                mapLayer = mapcount -1;
+            while (location < Long.MAX_VALUE) {
+                mapLayer = mapcount - 1;
                 ArrayList<ArrayList<Long>> currentLayer;
                 source = location;
-                while(mapLayer >-1) {
+                while (mapLayer > -1) {
                     currentLayer = allMapInfo.get(mapLayer);
-                    for (int i = 0; i < currentLayer.size(); i++) {
-                        for (ArrayList<Long> mapLine : currentLayer) {
-                            if (source <= mapLine.get(0) && source >= mapLine.get(0) + mapLine.get(2)) {
-                                //not entering this here
-                                Long displacement = source - mapLine.get(0);
-                                source = mapLine.get(1) + displacement;
-                                break;
-                            }
+                    for (ArrayList<Long> mapLine : currentLayer) {
+                        Long destt = mapLine.get(0);
+                        Long add = mapLine.get(2);
+                        if (source >= mapLine.get(0) && source <= mapLine.get(0) + mapLine.get(2)) {
+                            Long displacement = source - mapLine.get(0);
+                            source = mapLine.get(1) + displacement;
+                            break;
                         }
                     }
                     mapLayer--;
                 }
-                for(int i = 0; i < seedRanges.getFirst().size(); i++){
-                    if( seedRanges.getFirst().get(i) <= source && seedRanges.getLast().get(i) >= source){
+                for (int i = 0; i < seedRanges.getFirst().size(); i++) {
+                    Long lowerBound = seedRanges.getFirst().get(i);
+                    Long upperBound = seedRanges.getLast().get(i);
+                    if (lowerBound <= source && upperBound >= source) {
                         minSeed = source;
                         foundMin = true;
                         minlocation = location;
                         break;
                     }
                 }
-                if(foundMin){
+                if (foundMin) {
                     break;
                 }
-                System.out.println(location);
                 location++;
             }
             System.out.println(minlocation);
-            System.out.println(minSeed);
         }
     }
 }
