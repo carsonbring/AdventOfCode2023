@@ -2,7 +2,7 @@ from functools import cmp_to_key
 import os
 
 filepath = "./input/InputDay7"
-card_order = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+card_order = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"]
 hand_order = ["five", "four", "full", "three", "two", "one", "high"]
 hands = []
 with open(os.path.join(os.path.dirname(os.getcwd()), "input", "InputDay7")) as data:
@@ -25,14 +25,17 @@ def cmp_hand(h1, h2):
 
 def get_hand(hand):
     totals = []
-    for rank in card_order:
+    for rank in card_order[:-1]:
         total = 0
         for card in hand:
             if card == rank:
                 total += 1
         if total != 0:
             totals.append(total)
-    if totals.count(5) != 0:
+    num_jokers = hand.count('J')
+    if len(totals) != 0:
+        totals[totals.index(max(totals))] = max(totals) + num_jokers
+    if totals.count(5) != 0 or num_jokers == 5:
         return "five"
     if totals.count(4) != 0:
         return "four"
@@ -58,11 +61,12 @@ def find_highest(hand1, hand2):
 
 
 hands.sort(key=cmp_to_key(cmp_hand))
+antihands = hands[::-1]
 totalwinnings = 0
 rank = 1
 for i in range(len(hands)):
 
     totalwinnings = totalwinnings + rank * int(hands[i][1])
     rank += 1
-print("Part 1:")
+print("Part 2:")
 print(totalwinnings)
